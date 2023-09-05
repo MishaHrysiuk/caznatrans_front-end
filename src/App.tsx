@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import useLocalStorage from "use-local-storage";
 import Switch from "react-switch";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 import logo from "./logo.svg";
-import { Counter } from "./features/counter/Counter";
 import "./App.css";
 
+const languages = [
+    { code: "ua", name: "Українська", country_code: "ua" },
+    { code: "en", name: "English", country_code: "uk" },
+];
+
 function App() {
+    const [lang, setLang] = useState(localStorage.getItem("i18nextLng"));
+    const { t } = useTranslation();
     const [theme, setTheme] = useLocalStorage<"dark" | "ligth">(
         "theme",
         "dark"
@@ -16,16 +24,22 @@ function App() {
         setTheme(newTheme);
     };
 
+    const switchLang = () => {
+        i18next.changeLanguage(lang === "en" ? "ua" : "en");
+        setLang(lang === "en" ? "ua" : "en");
+    };
     return (
         <div className="App" data-theme={theme}>
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
-                <Counter />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
+                <iframe
+                    src="https://track2.ruptela.com/?track-link=b4LSpmhexoAosQm_i-0jtQ"
+                    width="95%"
+                    height="550px"
+                ></iframe>
+                <p>{t("main")}</p>
                 <span>
-                    <span>Learn </span>
+                    <span>{t("Learn")} </span>
                     <a
                         className="App-link"
                         href="https://reactjs.org/"
@@ -52,7 +66,7 @@ function App() {
                     >
                         Redux Toolkit
                     </a>
-                    ,<span> and </span>
+                    ,<span> {t("and")} </span>
                     <a
                         className="App-link"
                         href="https://react-redux.js.org/"
@@ -63,6 +77,7 @@ function App() {
                     </a>
                 </span>
                 <Switch onChange={switchTheme} checked={theme === "dark"} />
+                <Switch onChange={switchLang} checked={lang === "en"} />
             </header>
         </div>
     );
